@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'optparse'
 require 'json'
 require 'jwt'
@@ -6,19 +8,19 @@ require 'openssl'
 Process.setproctitle("JWS Signer")
 
 # Default CLI options
-options = {
-    :input_json => 'input.json',
-    :certificate => 'certificate.p12',
-    :passphrase => '12345',
-    :output => 'signed-output.json'
-}
+options = {}
 
 OptionParser.new do |parser|
     parser.banner = "Usage: jws-signer.rb [options]"
     
-    # Specify input JSON file to be signed
-    parser.on("-i", "--input JSON FILE", "The input JSON file to be signed.") do |input_json|
-        options[:input_json] = input_json
+    # Specify input JSON file to be signed. JWS payload
+    parser.on("-i", "--input JWT PAYLOAD", "The input JSON file to be signed (payload).") do |payload|
+        options[:payload] = payload
+    end
+
+    # Specify JWS header
+    parser.on("-h", "--header JWS HEADER", "The JWS header.") do |jws_header|
+        options[:jws_header] = jws_header
     end
 
     # Specify .p12 certificate to be used for signing
@@ -37,7 +39,7 @@ OptionParser.new do |parser|
     end
 
     # Print help
-    parser.on("-h", "--help", "Show help message.") do
+    parser.on("--help", "Show help message.") do
         puts parser
         exit
     end
@@ -48,6 +50,12 @@ def get_json_payload(input_json_path)
     return File.read(input_json_path)
 end
 
+# Read JWS header
+def get_jws_header(jws_header_path)
+    jsonString = File.read(jws_header_path) if jws_header_path
+    return JSON.parse(jsonString)
+end
+
 # Read .p12 certificate private key
 def get_rsa_private_key(certificate_path, passphrase)
     p12 = OpenSSL::PKCS12.new(File.read(certificate_path), passphrase)
@@ -55,15 +63,25 @@ def get_rsa_private_key(certificate_path, passphrase)
 end
 
 # Get JWS encoded and signed output
-def get_jws_output(payload, rsa_private_key)
-    JWT.encode(payload, rsa_private_key, 'RS256')
+def get_jws_output(header, payload, rsa_private_key)
+    if header 
+        JWT.encode(payload, rsa_private_key, algorithm='RS256', header_fields=header)
+    else
+        JWT.encode(payload, rsa_private_key, 'RS256')
+    end
 end
 
-payload = get_json_payload(options[:input_json])
+# Read inputs
+header = get_jws_header(options[:jws_header])
+payload = get_json_payload(options[:payload])
 rsa_private_key = get_rsa_private_key(options[:certificate], options[:passphrase])
 
-jws_output = get_jws_output(payload, rsa_private_key)
+# Prepare output
+jws_output = get_jws_output(header, payload, rsa_private_key)
 
-if jws_output
+if options[:output]
     File.write(options[:output], jws_output)
+else
+    puts jws_output
 end
+

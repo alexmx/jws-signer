@@ -1,0 +1,5 @@
+{
+	"typ": "jose+json",
+	"alg": "RS256",
+	"x5u": "https://www.example.com/certificate.pem"
+}
