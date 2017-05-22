@@ -6,7 +6,16 @@ Apply JWS Signatures [RFC-7515](https://tools.ietf.org/html/rfc7515) to JSON fil
 
 This CLI app uses **RS256** (RSA Signature with SHA-256) algorithm to sign the files.
 
-#### Available commands:
+#### Install dependencies
+
+```bash
+# Make sure that you have Bundler gem installed before running the command below.
+
+bundle install
+```
+
+
+#### Available commands
 
 ```
 Usage: jws-signer.rb [options]
@@ -37,7 +46,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.Intcblx0XCJ0ZXN0VmFsdWUxXCI6IDEsXG5cdFwidGV
 ```
 
 
-#### Get the public key from the certificate:
+#### Get the public key from the certificate
 
 Command:
 ```bash
@@ -70,7 +79,12 @@ kjuYDF1LW6ACyY2hJOzZRqG0fA==
 -----END CERTIFICATE-----
 ```
 
-#### Validate JWS signature:
+Alernatively you can extract the public key using openssl command:
+```bash
+openssl pkcs12 -in certificate.p12 -clcerts -nokeys
+```
+
+#### Validate JWS signature
 1) Go to [jwt.io](https://jwt.io/);
 2) Paste the ouptut JWS to the *Ecoded* text box;
 3) Paste the public key to the *Verify Signature* text box;
