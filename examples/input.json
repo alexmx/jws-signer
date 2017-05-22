@@ -1,0 +1,7 @@
+{
+	"testValue1": 1,
+	"testValue2": "Hello World",
+	"testValue3": [
+		"value1", "value2"
+	]
+}
