@@ -38,6 +38,11 @@ OptionParser.new do |parser|
         options[:output] = output
     end
 
+    # Print public key
+    parser.on("--public-key", "Print certificate public key.") do
+        options[:print_public_key] = true
+    end
+    
     # Print help
     parser.on("--help", "Show help message.") do
         puts parser
@@ -57,27 +62,33 @@ def get_jws_header(jws_header_path)
 end
 
 # Read .p12 certificate private key
-def get_rsa_private_key(certificate_path, passphrase)
+def get_rsa_keys(certificate_path, passphrase)
     p12 = OpenSSL::PKCS12.new(File.read(certificate_path), passphrase)
-    return p12.key
+    return p12.key, p12.certificate # Private and Public key
 end
 
 # Get JWS encoded and signed output
-def get_jws_output(header, payload, rsa_private_key)
+def get_jws_output(header, payload, private_key)
     if header 
-        JWT.encode(payload, rsa_private_key, algorithm='RS256', header_fields=header)
+        JWT.encode(payload, private_key, algorithm='RS256', header_fields=header)
     else
-        JWT.encode(payload, rsa_private_key, 'RS256')
+        JWT.encode(payload, private_key, 'RS256')
     end
 end
 
 # Read inputs
 header = get_jws_header(options[:jws_header])
 payload = get_json_payload(options[:payload])
-rsa_private_key = get_rsa_private_key(options[:certificate], options[:passphrase])
+private_key, public_key = get_rsa_keys(options[:certificate], options[:passphrase])
+
+# Print public key and exit
+if options[:print_public_key]
+    puts public_key
+    exit
+end
 
 # Prepare output
-jws_output = get_jws_output(header, payload, rsa_private_key)
+jws_output = get_jws_output(header, payload, private_key)
 
 if options[:output]
     File.write(options[:output], jws_output)
