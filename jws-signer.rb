@@ -14,7 +14,7 @@ OptionParser.new do |parser|
     parser.banner = "Usage: jws-signer.rb [options]"
     
     # Specify input JSON file to be signed. JWS payload
-    parser.on("-i", "--input JWT PAYLOAD", "The input JSON file to be signed (payload).") do |payload|
+    parser.on("-i", "--input JWS PAYLOAD", "The input JSON file to be signed (payload).") do |payload|
         options[:payload] = payload
     end
 
@@ -42,7 +42,7 @@ OptionParser.new do |parser|
     parser.on("--public-key", "Print certificate public key.") do
         options[:print_public_key] = true
     end
-    
+
     # Print help
     parser.on("--help", "Show help message.") do
         puts parser
@@ -52,13 +52,13 @@ end.parse!
 
 # Read input JSON file
 def get_json_payload(input_json_path)
-    return File.read(input_json_path)
+    return File.read(input_json_path) if input_json_path
 end
 
 # Read JWS header
 def get_jws_header(jws_header_path)
     jsonString = File.read(jws_header_path) if jws_header_path
-    return JSON.parse(jsonString)
+    return JSON.parse(jsonString) if jsonString
 end
 
 # Read .p12 certificate private key
