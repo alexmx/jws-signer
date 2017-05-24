@@ -52,7 +52,8 @@ end.parse!
 
 # Read input JSON file
 def get_json_payload(input_json_path)
-    return File.read(input_json_path) if input_json_path
+    jsonString = File.read(input_json_path) if input_json_path
+    return JSON.parse(jsonString) if jsonString
 end
 
 # Read JWS header
