@@ -93,7 +93,13 @@ jws_output = get_jws_output(header, payload, private_key)
 
 if options[:output]
     File.write(options[:output], jws_output)
-else
-    puts jws_output
 end
 
+puts "[JWS HEADER]"
+puts header
+
+puts "[JWS PAYLOAD]"
+puts payload
+
+puts "[JWS OUTPUT]"
+puts jws_output
