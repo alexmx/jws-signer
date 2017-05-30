@@ -6,6 +6,8 @@ Apply JWS Signatures [RFC-7515](https://tools.ietf.org/html/rfc7515) to JSON fil
 
 This CLI app uses **RS256** (RSA Signature with SHA-256) algorithm to sign the files.
 
+Check out [this link](https://support.apple.com/kb/PH20131?locale=en_US&viewlocale=en_US) if you need help on how to create a self-signed certificate on macOS.
+
 #### Install dependencies
 
 ```bash
