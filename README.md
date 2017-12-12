@@ -2,7 +2,7 @@
 [![Twitter: @amaimescu](https://img.shields.io/badge/contact-%40amaimescu-blue.svg)](https://twitter.com/amaimescu)
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://github.com/alexmx/ios-ui-automation-overview/blob/master/LICENSE)
 
-Apply JWS Signatures [RFC-7515](https://tools.ietf.org/html/rfc7515) to JSON files using a [PKCS #12](https://en.wikipedia.org/wiki/PKCS_12) archive.
+Apply  [JSON Web Signature (JWS)](https://tools.ietf.org/html/rfc7515) to JSON payloads using identities distributed as [PKCS #12](https://en.wikipedia.org/wiki/PKCS_12) (.p12) archive.
 
 This CLI app uses **RS256** (RSA Signature with SHA-256) algorithm to sign the files.
 
